@@ -1,0 +1,26 @@
+{
+  "name": "node_first",
+  "version": "1.0.0",
+  "description": "\"Node crash course\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "gonzaloetjo"
+  },
+  "keywords": [
+    "nodefirst"
+  ],
+  "author": "Gonzalo Etse",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
