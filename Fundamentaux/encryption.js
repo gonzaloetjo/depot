@@ -5,8 +5,8 @@ let message = prompt("Send a message: ");
 
 
 let bmessage = Buffer.from(message)
-//let key = Buffer.from(crypto.randomBytes(message.length))
-let key = Buffer.from('ola')
+let key = Buffer.from(crypto.randomBytes(message.length))
+//let key = Buffer.from('ola')
 
 function crpyting(bmessage, key){
     let encryption = []
