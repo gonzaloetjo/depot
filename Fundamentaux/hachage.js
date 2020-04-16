@@ -15,24 +15,31 @@ function codeVerification(message){
 function verifierCode(message,code){
     let data = Buffer.from(message)
     let hash = crypto.createHash('sha256').update(data)
-    if (code === hash.digest('hex').substr(0,8)){
-        return true
-    }
-    else {
-        return false
-    }
-    
-    
+    return (code === hash.digest('hex').substr(0,8)) ? true : false
 }
 
 function vanite(debut, message){
     let nonce = 0
 
+    function hashing(message) {
+        let data = Buffer.from(message)
+        let hash = crypto.createHash('sha256').update(data).digest('hex')
+        let start = hash.substr(0,2)
+        console.log(start)
+        return start
+    }
+    start1 = hashing(message)
+
+    while (start1 !== debut){
+        message = message + 1
+        hashing(message)
+        console.log(start1)
+        nonce += 1
+        return message
+    }
     return nonce
 }
 function verifierVanite(debut, message, nonce){
-    
-    
     return true
 }
 
@@ -48,3 +55,5 @@ console.log(`Verification code is :\' ${code}\', validation : ${verifierCode(mes
 
 let debutHash = 'ab'
 console.log(`A hash starting by \'${debutHash}\' peut être obtenu en ajoutant ${vanite(debutHash,message)} au message`)
+
+
