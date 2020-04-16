@@ -53,7 +53,7 @@ let message_2 = prompt("Verify this message: ");
 let code = codeVerification(message_2)
 console.log(`Verification code is :\' ${code}\', validation : ${verifierCode(message,code)}`)
 
-
 let debutHash = 'ab'
 console.log(`A hash starting by \'${debutHash}\' peut être obtenu en ajoutant ${vanite(debutHash,message)} au message`)
+
 
