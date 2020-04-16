@@ -20,31 +20,26 @@ function verifierCode(message,code){
 
 function vanite(debut, message){
     let nonce = 0
-
     function hashing(message) {
         let data = Buffer.from(message)
-        let hash = crypto.createHash('sha256').update(data).digest('hex')
-        let start = hash.substr(0,2)
-        console.log(start)
+        let start = crypto.createHash('sha256').update(data).digest('hex').substr(0,2)
         return start
     }
     start1 = hashing(message)
 
-    while (start1 !== debut){
+    while (start1 !== 'ab'){
         message = message + 1
         hashing(message)
-        console.log(start1)
         nonce += 1
-        return message
     }
-    return nonce
+    return `${message} in ${nonce} steps `
 }
-function verifierVanite(debut, message, nonce){
-    return true
-}
-
+// function verifierVanite(debut, message, nonce){
+//     return true
+// }
 
 //let message = "Bonjour à tous"
+
 let data = Buffer.from(message)
 let hash = crypto.createHash('sha256').update(data)
 console.log(`The message is \'${message}\'. The has is ${hash.digest('hex')}`)
