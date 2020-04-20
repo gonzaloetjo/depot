@@ -2,9 +2,9 @@
 const crypto = require('crypto')
 let hash = enc => crypto.createHash('sha256').update(enc).digest('hex').substr(0,2)
 
-let chaine = ["AA","BB","CC","DD", "EE", "GG"], total = [leaves], dist = ""
+let chaine = ["AA","BB","CC","DD", "EE"], leaves = [], total = [leaves], dist = ""
 for (let i = 0; i < chaine.length; i++) {leaves.push(hash(Buffer.from(chaine[i])))}
-
+total = [leaves], dist = ""
 array = arr => {
     let node = []
     if (arr.length % 2 !== 0 && arr.length > 1){
