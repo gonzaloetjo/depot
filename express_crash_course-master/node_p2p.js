@@ -1,35 +1,55 @@
-// const https = require('https')
-// const express = require('express')
-// const path = require('path')
-// const app = express()
-// var portfinder = require('portfinder'); //https://github.com/http-party/node-portfinder
-// portfinder.basePort = 5000;
-// portfinder.highestPort = 6000;
-
-// class Node {
-//     constructor(name) {
-//         this.name = name
-//         this.message = undefined
-//         this.port = 
-//             portfinder.getPort((err, port) => {
-//                 //
-//                 // `port` is guaranteed to be a free port
-//                 // in this scope.
-//                 //
-//              });
-//     }
+const https = require('https')
+const express = require('express')
+const path = require('path')
+const app = express()
+var portfinder = require('portfinder'); //https://github.com/http-party/node-portfinder
+portfinder.basePort = 5000;
+portfinder.highestPort = 6000;
 
 
-//     server() {
-//         app.listen(port, function () {
-//         console.log(`App listening on port ${port}!`)
-//       })
-//     }
+function NumberBetween(min, max) {
+    return (Math.random() * (max-min) | 0) + min;
+}
+// console.log(portfinder.getPort(function(err,port){
+//     return port
+// }))
 
-// }
+var port = NumberBetween(5000,6000)
 
-// var listens = new Node("Hola")
-// console.log(listens)
+
+class Node {
+    constructor(name, port) {
+        this.name = name
+        this.message = undefined
+        this.port = port
+    }
+
+    // createServer(0, function () {
+    //     this.port = this.address().port;
+    //     console.log('server was assigned port ' + port);
+    //     createServer(port+1, function () {
+    //       var port = this.address().port;
+    //       console.log('server was assigned port ' + port);
+    //       createServer(0, function () {
+    //         var port = this.address().port;
+    //         // This line will show that the OS skipped the occupied port and assigned the next available port.
+    //         console.log('server was assigned port ' + port);
+    //       });
+    //     });
+    //   });
+
+
+    server() {
+        app.listen(port, function () {
+        console.log(`App listening on port ${port}!`)
+      })
+    }
+
+}
+
+let listens = new Node("Hola",port)
+
+console.log(listens)
 
 // var portrange = 5000
 
@@ -48,8 +68,8 @@
 //       getPort(cb)
 //     })
 //   }
-// const port = 3000;
-// const url = "https://blockchain.info/rawblock/"
+//const port = 3000;
+//const url = "https://blockchain.info/rawblock/"
 // block/000000000002de92d93fcb92eeb2be097af8570a70fa5a8c6df473626891c9d6"
 
 // const logger = (req, res, next) => {

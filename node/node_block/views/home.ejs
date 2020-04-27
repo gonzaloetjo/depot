@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title></title>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <section>
+        <h3>Conversion Hexadecimal</h3>
+        <input type="text" value="0" id="decimal"><br>
+        hexagecimal: <span type="text" id="hexagecimal"></span><br>
+        leading zeros: <span type="text" id="difficulty"></span><br>
+        bdif: <span type="text" id="difficulty2"></span><br>
+        pdif: <span type="text" id="difficulty3"></span><br>
+        <button id="convertir">convertir</button>
+        <script>
+            function conversion(decimal){
+                decimal = parseInt(decimal)
+                hexa = decimal.toString(16)
+                if (hexa.length % 2 == 1){
+                    hexa = '0' + hexa
+                }
+            return hexa
+            }
+            function difficulty(hexa){
+                zero = 0
+                backline = parseInt(hexa.slice(0,2),16)
+                console.log(backline)
+                for (let i = 0; i < hexa.slice(2,8).length; i++) {
+                    if (hexa.slice(2,8)[i] == 0) {
+                        zero++
+                    } else { break
+                    }         
+                }     
+                zeros = (32 - backline)*2 + zero
+                bdif = 0x00000000FFFF0000000000000000000000000000000000000000000000000000 / 
+                 ('0x' + '0'.repeat(zeros) + hexa.slice(2+zero,8) + '0'.repeat((backline-3)*2))
+                pdif = 0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF / 
+                 ('0x' + '0'.repeat(zeros) + hexa.slice(2+zero,8) + '0'.repeat((backline-3)*2))
+                array = [zeros, bdif, pdif]
+                return array
+            }
+            document.getElementById('convertir').addEventListener('click', event => {
+                decimal = document.getElementById('decimal').value
+                console.log(typeof decimal)
+                document.getElementById('hexagecimal').innerHTML = '0x' + conversion(decimal)
+                hexass = conversion(decimal)
+                console.log(typeof hexass)
+                document.getElementById('difficulty').innerHTML = difficulty(hexass)[0]
+                document.getElementById('difficulty2').innerHTML = difficulty(hexass)[1]
+                document.getElementById('difficulty3').innerHTML = difficulty(hexass)[2]
+                
+            })            
+        </script>
+        </section><br>
+
+        <section>
+            <h3>Conversion Decimal</h3>
+            <input type="text" value="0" id="dec"><br>
+            <span type="text" id="hex"></span><br>
+            <button id="conv">convertir</button>
+            <script>
+                document.getElementById('conv').addEventListener('click', event => {
+                    dec = document.getElementById('dec').value
+                    console.log(typeof dec)
+                    document.getElementById('hex').innerHTML = '0x' + parseInt(dec,16)
+                })            
+            </script>
+            </section><br>
+
+        <section>
+            <h3>Conversion hexagecimal</h3>
+            Hexa Litle Endian : <input type="text" value="000001FF" id="hle"><br>
+            Hexagecimal : <span tpye="text" id="hexigecimal"></span><br>
+            Decimal : <span type="text" id="dicimal"></span><br>
+            <button id="convertHexaLE">Convertir</button>
+        </section>
+        <script>
+            function convertHexaLE(h){
+                //h = parseInt(h)
+                if (h.length % 2 == 1){
+                    h = '0' + h
+                }
+                let retour = ""
+                for (let i = 0; i < h.length-1; i+=2) {
+                    retour = h[i] + h[i + 1] + retour                    
+                }
+                return retour
+            }
+            document.getElementById('convertHexaLE').addEventListener('click', event => {
+                hle = document.getElementById('hle').value
+                hixa = convertHexaLE(hle)
+                document.getElementById('hexigecimal').innerHTML = '0x' + hixa
+                console.log('0x' + hixa)
+                console.log(parseInt(hixa,16))
+                document.getElementById('dicimal').innerHTML = parseInt(hixa,16)
+            })
+        </script>
+    </body>
+</html>
