@@ -10,9 +10,9 @@ const url = "https://blockchain.info/rawblock/"
 app.listen(3000, function () {
   console.log(`App listening on port ${port}!`)
 })
-
+app.set('view engine', 'ejs')
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+  res.render('home')
 })
 
 app.get('/block/:block', function (req, res, next) {
@@ -30,7 +30,7 @@ app.get('/block/:block', function (req, res, next) {
 	        	str += 'Height : '+blockJSON.height+'<br>'
 	        	for (let i=0,j=blockJSON.tx.length;i<j;i++){
 	        		str += 'Hash '+(i+1)+' : '+blockJSON.tx[i].hash+'<br>'
-	        	}
+	        	}	
 	        	
 						
 	        console.log(blockJSON)
