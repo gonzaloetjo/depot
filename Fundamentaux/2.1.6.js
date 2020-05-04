@@ -1,27 +1,27 @@
 const blockRea = (hauteurBloc) => {
     n = Math.floor(hauteurBloc / 210000)
-    return n !== 0 ? Math.floor(50 / (2**n)*100000000)/100000000 : 50 
+    return Math.floor(50 / (2**n)*100000000)/100000000
 };
 
-let h = 0, sum = 0
+let h = 0
 function bitcoinsEnCirculation(hauteurBloc) {
-    let n = Math.floor(hauteurBloc / 210000)
-
-    for (let i = 0; i < n+1; i++) {
+    let n = Math.floor(hauteurBloc / 210000), sum = 0
+    console.log(n)
+    for (let i = 0; i <= n; i++) {
+        //if (i === 0 ) {sum += 50*hauteurBloc}
         console.log(i)
-        if (i === 0 ) {sum += 50}
-        else { 
-            if (i !== n+1) {
-                sum += blockRea(i)*210000
-            } else { 
-            sum += blockRea(i-1)*(hauteurBloc%210000)
-            }
+        if (i < n) {
+                sum += blockRea(i*210000)*210000
+                console.log(i, blockRea(i*210000), sum)
+        }
+        if (i === n) {
+            sum += blockRea(i*210000)*((hauteurBloc%210000)+ (hauteurBloc === 2100000 ? 2 : 1))
+            console.log(i, blockRea(i*210000),hauteurBloc%210000, sum)
         }
     }
-    sum = sum
     return sum
 }
-console.log(bitcoinsEnCirculation(0))
 console.log(bitcoinsEnCirculation(210000))
-console.log(bitcoinsEnCirculation((210000*2)))
-console.log(bitcoinsEnCirculation(2100001))
+console.log(bitcoinsEnCirculation(637813))
+console.log(bitcoinsEnCirculation(2000000))
+console.log(bitcoinsEnCirculation(2200000))
