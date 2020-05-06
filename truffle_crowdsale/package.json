@@ -1,0 +1,12 @@
+{
+  "name": "token-tests",
+  "version": "0.0.1",
+  "devDependencies": {
+    "solidity-coverage": "^0.6.7"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.4.0",
+    "@openzeppelin/test-helpers": "^0.5.3",
+    "@truffle/hdwallet-provider": "^1.0.34"
+  }
+}
