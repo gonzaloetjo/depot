@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Première DApp</title>
+  </head>
+
+  <body>
+    <h1>Titre de la première DApp</h1>
+    <script
+      src="https://cdn.ethers.io/scripts/ethers-v4.min.js"
+      charset="utf-8"
+      type="text/javascript"
+    ></script>
+    <script
+      src="application.js"
+      charset="utf-8"
+      type="text/javascript"
+    ></script>
+    <button id="Metamasked">Connect to MetaMask</button><br />
+    <br />
+    Ether in Wallet: <span type="text" id="balance"></span><br />
+    Last Block Number: <span type="text" id="lastBlock"></span><br />
+    Gas Price of Last Block: <span type="text" id="gasPrice"></span><br />
+    <script>
+      document
+        .getElementById("Metamasked")
+        .addEventListener("click", async (event) => {
+          let metamaskeds = createMetaMaskDapp();
+          let account = await Account();
+          console.log(account);
+          document.getElementById("balance").innerHTML = account.balance;
+          document.getElementById("lastBlock").innerHTML = account.blockNumbers;
+          document.getElementById("gasPrice").innerHTML = account.gasPrice;
+        });
+    </script>
+    <h2>Interaction avec un contrat <samp>Credibilite</samp></h2>
+    <div>
+      <label
+        ><button onclick="instanceContract()">Charger le contrat</button>
+        <input
+          id="contractAddress"
+          type="text"
+          value="0xeD535ee10431028F887436Ed16E667f9750004C5"
+      /></label>
+
+      <label class="hidden"
+        ><button onclick="remettreDevoir()">Remettre un devoir</button>
+        <input
+          id="devoirURL"
+          type="text"
+          value="https://github.com/example/example/blob/master/devoir.sol"
+      /></label>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "marketplace",
+  "version": "1.0.0",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.0.1"
+  }
+}

@@ -1,4 +1,4 @@
-pragma solidity ^0.6.0;
+pragma solidity 0.6.0;
 
 contract Owned {
     address owner;
@@ -15,6 +15,7 @@ contract Owned {
 
 contract Whitelist is Owned {
     uint256 dateLimit;
+    uint[] team_portions;
     //address[] whitelist; //in case of using a table instead of the mapping
 
     constructor() public {
@@ -29,18 +30,21 @@ contract Whitelist is Owned {
         //mapping (bool => address[]) _lists;
         //address[] addresses;
         uint dateFin; // end date for voting
+        uint rate_team;
     }
 
     Whitelists[] public whitelists;
     mapping (address => bool) members;
     mapping (uint256 => address[]) addresses;
+    mapping (address => uint) indices;
     //mapping (bool => uint[]) tryhard;
     //Whitelists[] public whitelists;
-    
-    function newGroup(uint _portion,string memory _name) public onlyOwner {
-        whitelists.push(Whitelists(_name,_portion, now + 7 days));
+    function newGroup(uint _portion,string memory _name, uint _rate_team) public onlyOwner limitGroups {
+        require(_portion < 100);
+        require(_rate_team < 3);
+        whitelists.push(Whitelists(_name,_portion, now + 7 days, _rate_team));
+        team_portions.push(_portion);
     }
-        
     function add (address _address, uint indice) public onlyOwner {
         //require(owner == msg.sender, "Not Owner")
         require(_address != address(0), "Can't add this address");
@@ -51,13 +55,21 @@ contract Whitelist is Owned {
         //whitelists[indice].address.push(_address);
         members[_address] = true;
         addresses[indice].push(_address);
+        indices[_address] = indice;
         
         //tryhard[]
         //whitelist.push(_address) // in case of using the table
     }
-    
-
     function getList (uint indice) public view returns (string memory, uint, address [] memory) {
         return (whitelists[indice].name, whitelists[indice].portion, addresses[indice]);
     }
+    
+    modifier limitGroups() {
+        require(whitelists.length < 5);
+        _;
+    }
+    
+    //modifier proportionsSum() {
+        //require(team_portions[0] + team_portions[1] + team_portions[2] + team_portions[3] = 100);
+    //}
 }
