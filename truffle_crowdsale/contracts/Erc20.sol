@@ -5,8 +5,8 @@ import "./SafeMath.sol";
 contract ERC20 {
     using SafeMath for uint;
     address public owner; // 0x0000000...
-    string public name = "COV Token";
-    string public symbol = "COV";
+    string public name = "ERC20 Token";
+    string public symbol = "TOK";
     uint decimals = 18;
     //uint private _totalSupply;
     uint private _totalSupply = 10000 * 10**decimals; // if we want to have a fixed ammount
@@ -25,14 +25,14 @@ contract ERC20 {
     
     constructor() public{
         owner = msg.sender;
-        _balances[msg.sender] = _totalSupply;
+        _balances[owner] = _totalSupply;
     }
     
-    function mint(address account, uint256 amount) onlyOwner public {
+    /*function mint(address account, uint256 amount) onlyOwner public {
         //require(msg.sender == owner, "msg erreur");
         _balances[account] = _balances[account].add(amount);
         _totalSupply = _totalSupply.add(amount);
-    }
+    }*/
     
     function totalSupply() public view returns (uint256){
         return _totalSupply;
