@@ -1,5 +1,11 @@
-var SceneOuverte = artifacts.require("./SceneOuverte.sol");
+// var SimpleStorage = artifacts.require("./SimpleStorage.sol");
+
+// module.exports = function(deployer) {
+//   deployer.deploy(SimpleStorage);
+// };
+
+const marketPlace = artifacts.require("marketPlace");
 
 module.exports = function(deployer) {
-  deployer.deploy(SceneOuverte);
+  deployer.deploy(marketPlace);
 };

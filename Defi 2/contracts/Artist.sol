@@ -1,16 +1,17 @@
-pragma solidity ^0.6.0;
-import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+pragma solidity >=0.4.21 <0.7.0;
+import "./SafeMath.sol";
 
 contract Rating {
     using SafeMath for uint256;
 
     //VARIABLES
-    
+    address payable public wallet;
     mapping (address => bool) public allArtist;
     mapping (address => bool) public blackList;
     mapping(string => bool) artist_name;
     address[] private admins;
     address public owner;
+    
 
     //STRUCTURES  
 
@@ -36,8 +37,9 @@ contract Rating {
     }
     mapping(address => Artist) artists;
     
-    constructor() public{
+    constructor() public payable{
         owner = msg.sender;
+        wallet = msg.sender;
         registerAdmin();
     }
 
@@ -56,12 +58,12 @@ contract Rating {
     }
     
     modifier isAnArtist(address _artist) {
-        require(allArtist[_artist] == true, "Not suscribed as an Artist");
+        require(allArtist[_artist] == true, "Not registered as an Artist");
         _;
     }
     
     modifier NotAnArtist(address _artist) {
-        require(allArtist[_artist] == false, "Is not an Artist");
+        require(allArtist[_artist] == false, "Already an Artist");
         _;
     }
     
@@ -82,7 +84,7 @@ contract Rating {
 
     //FUNCTIONS
     
-    function inscription(string memory _name) public NotAnArtist(msg.sender) nameArtist (_name) {
+    function register(string memory _name) public NotAnArtist(msg.sender) nameArtist (_name) {
         artists[msg.sender].userReputation = 5;
         artists[msg.sender].name = _name;
         artists[msg.sender].artist_present[msg.sender] = true;
