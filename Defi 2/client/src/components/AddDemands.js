@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Card, Form, Button, Col } from 'react-bootstrap';
 
-class AddRequest extends Component {
+class AddDemands extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: '',
-      payment: '',
       deadline: '',
-      minReputation: ''
+      description: '',
+      minReputation: '',
+      demand_name: '',
+      payment: '',
     }
   }
 
@@ -20,11 +21,11 @@ class AddRequest extends Component {
     });
   };
 
-  addRequest = async (description, payment, deadline, minReputation) => {
+  addDemands = async (deadline, description, minReputation, demand_name, payment) => {
     const { contract, accounts } = this.props;
 
     try {
-      await contract.methods.addRequest(description, payment, deadline, minReputation).send({ from: accounts[0] });
+      await contract.methods.addDemands(deadline, description, minReputation, demand_name, payment).send({ from: accounts[0] });
 
     } catch (err) {
       console.log(err);
@@ -32,13 +33,23 @@ class AddRequest extends Component {
   }
 
   render() {
-    const { description, payment, deadline, minReputation } = this.state;
+    const { deadline, description, minReputation, demand_name, payment} = this.state;
 
     return (
       <Card>
-        <Card.Header as='h5'>Add Request</Card.Header>
+        <Card.Header as='h5'>Add Demands</Card.Header>
         <Card.Body>
           <Form>
+            <Form.Group>
+              <Form.Label as='h5'>Request Name</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter a name for the demand'
+                name='demand_name'
+                value={demand_name}
+                onChange={this.handleChange}
+              />
+            </Form.Group>
             <Form.Group>
               <Form.Label as='h5'>Description</Form.Label>
               <Form.Control
@@ -91,7 +102,7 @@ class AddRequest extends Component {
               block
               className='mt-3'
               onClick={() =>
-                this.addRequest(description, payment, deadline, minReputation)
+                this.addDemands(deadline, description, minReputation, demand_name, payment)
               }
             >
               Submit
@@ -103,4 +114,4 @@ class AddRequest extends Component {
   }
 }
 
-export default AddRequest;
+export default AddDemands;

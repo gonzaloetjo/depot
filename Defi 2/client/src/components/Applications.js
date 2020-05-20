@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Table, Button }  from 'react-bootstrap';
 
-class Requests extends Component {
+class Applications extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      requests: [],
+      applications: [],
     }
   }
 
   componentDidMount = () => {
-    this.getRequests();
+    this.getApplications();
   }
 
-  getRequests = async () => {
+  getApplications = async () => {
     const { contract } = this.props;
 
     try {
-      const requests = await contract.methods.getRequests().call();
+      const applications = await contract.methods.getApplications().call();
 
-      this.setState({ requests });
+      this.setState({ applications });
     } catch (err) {
       console.log(err);
     }
@@ -36,7 +36,7 @@ class Requests extends Component {
   }
 
   render() {
-    const { requests } = this.state;
+    const { Applications } = this.state;
     const stateRequest = ['OPEN', 'INPROGRESS', 'CLOSED'];
 
     return (
@@ -56,7 +56,7 @@ class Requests extends Component {
                 </tr>
               </thead>
               <tbody>
-                {requests.map((el, idx) => (
+                {Applications.map((el, idx) => (
                   <tr key={idx}>
                     <td>{el.id}</td>
                     <td>{stateRequest[el.state]}</td>
@@ -88,4 +88,4 @@ class Requests extends Component {
   }
 }
 
-export default Requests;
+export default Applications;
