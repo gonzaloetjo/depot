@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 import "./Artist.sol";
 import "./SafeMath.sol";
 //https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#methods-mymethod-estimategas 
-
+//SPDX-License-Identifier: UNLICENSED
 contract marketPlace is Rating{
 
     //VARIABLES  
@@ -15,7 +15,6 @@ contract marketPlace is Rating{
     address[] public applications;
     mapping(address => bool) companies_existance;
     mapping(string => bool) companies_name;
-    mapping(address => uint) c_balances;
     uint keys = 0;
     //STRUCTURES   
 
@@ -26,6 +25,7 @@ contract marketPlace is Rating{
         string description;
         Status status;
         uint remuneration;
+        address company_address;
     }
 
     struct Demand{
@@ -49,13 +49,14 @@ contract marketPlace is Rating{
         string name;
         mapping(string => Demand) demands;
         mapping(string => bool) all_demands_company;
+        bool has_demand;
     }
 
     //MAPPINGS FOR STRUCTURE  
 
     mapping(address => Companies)  public companies;
     mapping(uint => Dem) public dems;
-    mapping(address => uint) public dem_key;
+    mapping(string => mapping(address => uint)) public dem_key;
 
 
     // MODIFIERS  
@@ -147,6 +148,7 @@ contract marketPlace is Rating{
         companies_name[_company_name] = true;
         companies_existance[msg.sender] = true;
         companies_addresses.push(msg.sender);
+        companies[msg.sender].has_demand = false;
     }
 
     function getCompanies() public view returns(address[] memory){
@@ -165,15 +167,18 @@ contract marketPlace is Rating{
         companies[msg.sender].demands[_demand_name].value = _value;
         companies[msg.sender].demands[_demand_name].balances[msg.sender] = 0;
         companies[msg.sender].all_demands_company[_demand_name] = true;
+        companies[msg.sender].has_demand = true;
         //demandx = strConcat("Company :", companies[msg.sender].name, " | ", _demand_name, " ");
         all_demands.push(_demand_name);
         addDeposit(_demand_name, _value);
         dems[keys].company = companies[msg.sender].name;
+        dems[keys].demand = _demand_name;
         dems[keys].delay = _delay;
         dems[keys].status = Status.Open;
         dems[keys].remuneration = _value;
-        dem_key[msg.sender] = keys;
+        dems[keys].company_address = msg.sender;
         keys = keys.add(1);
+        dem_key[_demand_name][msg.sender] = keys;
     }
 
     function getDemands() public view returns(string[] memory){
@@ -194,15 +199,25 @@ contract marketPlace is Rating{
     function application(address _company, string memory _demand_name) public payable
     isAnArtist(msg.sender) statusOpen(_company, _demand_name) notApplied(_company, _demand_name) checkReputation(_company, _demand_name) {
         companies[_company].demands[_demand_name].candidates[msg.sender] = true;
+        applications.push(msg.sender);
     }
 
+    function getAplication(address _company, string memory _demand_name, address _artist) public view returns (bool){
+        return companies[_company].demands[_demand_name].candidates[_artist];
+    }
+
+
+    function getApps() public view returns (address[] memory) {
+        return applications;
+    }
+    
     function winningOffer(string memory _demand_name, address payable _artist) public
     companySuscribed(msg.sender) ownerCompany(msg.sender) demandExist(_demand_name) 
     statusOpen(msg.sender, _demand_name) Applied(msg.sender, _demand_name, _artist)  {
         companies[msg.sender].demands[_demand_name].chosen = _artist;
         companies[msg.sender].demands[_demand_name].status = Status.Ongoing;
         companies[msg.sender].demands[_demand_name].deadline = now.add(companies[msg.sender].demands[_demand_name].delay);
-        dems[dem_key[msg.sender]].status = Status.Ongoing;
+        dems[dem_key[_demand_name][msg.sender]].status = Status.Ongoing;
     }
     
     function delivery(address _company, string memory _demand_name, string memory _art_piece, string memory _url) public 
@@ -221,7 +236,7 @@ contract marketPlace is Rating{
         companies[msg.sender].demands[_demand_name].status = Status.Closed; 
         setReview(_artist, _art_piece, _rating);
         artistPayment(msg.sender, _demand_name, _artist);
-        dems[dem_key[msg.sender]].status = Status.Closed;
+        dems[dem_key[_demand_name][msg.sender]].status = Status.Closed;
 
     }
     
@@ -241,23 +256,26 @@ contract marketPlace is Rating{
     function getKeys() public view returns (uint) {
         return keys;
     }
-    
-    /*function strConcat(string memory _a, string memory _b, string memory _c, string memory _d, string memory _e) internal returns (string memory){
-        bytes memory _ba = bytes(_a);
-        bytes memory _bb = bytes(_b);
-        bytes memory _bc = bytes(_c);
-        bytes memory _bd = bytes(_d);
-        bytes memory _be = bytes(_e);
-        string memory abcde = new string(_ba.length + _bb.length + _bc.length + _bd.length + _be.length);
-        bytes memory babcde = bytes(abcde);
-        uint k = 0;
-        for (uint i = 0; i < _ba.length; i++) babcde[k++] = _ba[i];
-        for (uint i = 0; i < _bb.length; i++) babcde[k++] = _bb[i];
-        for (uint i = 0; i < _bc.length; i++) babcde[k++] = _bc[i];
-        for (uint i = 0; i < _bd.length; i++) babcde[k++] = _bd[i];
-        for (uint i = 0; i < _be.length; i++) babcde[k++] = _be[i];
-        return string(babcde);
-    }*/
+
+    function companyDemands(address _company, string memory _demand_name) public view returns (bool) {
+        return companies[_company].all_demands_company[_demand_name];
+    }
+
+    function demandKey(address _company, string memory _demand_name) public view returns (uint) {
+        return dem_key[_demand_name][_company];
+    }
+    function isCompany(address _company) public view returns (bool) {
+        return companies_existance[_company];
+    }
+    function hasDemand(address _company) public view returns (bool) {
+        return companies[_company].has_demand;
+    }
+
+    // function getCompanyName(address _company) public view returns (string memory){
+    //     return companies[_company].name;
+    // }
 
 }
+
+
 

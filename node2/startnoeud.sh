@@ -1,0 +1,1 @@
+geth --datadir '/home/pupulvuh/code/gonzaloetjo/depot/node1' --syncmode 'full' --networkid '5764' --port '30304' --rpc --rpcaddr 'localhost' --rpcport "8546" --rpcapi 'personal,db,eth,net,web3,txpool,miner, clique' --nodiscover --mine --gasprice '0' --allow-insecure-unlock --unlock '0xbc90645f8d2b49a15fe74f0ec247263e6a5966cc' --password ./pwd.tx

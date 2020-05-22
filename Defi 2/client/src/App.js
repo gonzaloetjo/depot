@@ -6,8 +6,11 @@ import Blacklist from './components/Blacklist';
 import Register from './components/Register';
 import AddDemands from './components/AddDemands';
 import Demands from './components/Demands';
+import DemandsC from './components/DemandsC';
 //import Artwork from './images/artwork.jpg';
 import NewCompany from './components/NewCompany';
+import Applications from './components/Applications';
+
 
 import MarketPlaceContract from './contracts/marketPlace.json';
 
@@ -20,12 +23,20 @@ class App extends Component {
       web3: null,
       accounts: null,
       contract: null,
-      isAdmin: true,
+      isAdmin: false,
+      isCompany: false,
+      isNew: false,
+      hasDemand: false,
+      isArtist: false,
     };
   }
   componentDidMount = async () => {
     await this.loadWeb3();
-    this.isAdmin();
+    await this.isAdmin();
+    await this.isCompany();
+    await this.hasDemad();
+    await this.isNew()
+    await this.isArtist()
     };
   loadWeb3 = async () => {
     try {
@@ -66,6 +77,59 @@ class App extends Component {
       console.log(err);
     }
   }
+
+  isCompany = async() => {
+    const { accounts, contract } = this.state;
+
+    try {
+      if ( await contract.methods.isCompany((accounts[0])).call()) {
+        this.setState({ isCompany: true});
+      } 
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  hasDemad = async() => {
+    const { accounts, contract } = this.state;
+
+    try {
+      if (await contract.methods.hasDemand((accounts[0])).call()) {
+        this.setState({ hasDemand: true});
+      } 
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  isNew = async() => {
+    const { accounts, contract } = this.state;
+
+    try {
+      console.log(await contract.methods.isCompany((accounts[0])).call())
+      if (await contract.methods.isCompany((accounts[0])).call() === false &&
+      await contract.methods.isArtist((accounts[0])).call() === false ) {
+        this.setState({ isNew: true});
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  isArtist = async() => {
+    const { accounts, contract } = this.state;
+
+    try {
+      console.log(await contract.methods.isCompany((accounts[0])).call())
+      if (await contract.methods.isArtist((accounts[0])).call() === true ) {
+        this.setState({ isArtist: true});
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  
+
 ;
   // runExample = async () => {
   //   const { accounts, contract } = this.state;
@@ -81,48 +145,72 @@ class App extends Component {
   // };
 
   render() {
-    const { accounts, contract, web3, isAdmin } = this.state;
+    const { accounts, contract, web3, isAdmin, isCompany, isNew, hasDemand, isArtist } = this.state;
     if (!web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+    window.ethereum.on('chainChanged', () => {
+      document.location.reload()
+    })
+  
     return (
+      
       <div className="App">
         <Header title='Illustrator MarketPlace' />
           <Container>
+            {isNew ? (
+              <Row>
+                <Col sm={6}>
+                  <Register contract={contract} accounts={accounts} />
+                </Col>
+                <Col sm={6}>
+                  <NewCompany contract={contract} accounts={accounts} />
+                </Col>
+              </Row>
+            ) : null}
+            {(isNew === false) ? (
             <Row>
-              <Col sm={6}>
-                <Register contract={contract} accounts={accounts} />
-              </Col>
-              <Col sm={6}>
-                <NewCompany contract={contract} accounts={accounts} />
-              </Col>
+              <Row className='mt-3'>
+                <Col>
+                  {isAdmin ? (
+                    <Blacklist contract={contract} accounts={accounts} />
+                    ) : null}
+                </Col>
+              </Row>
+
+              <Row className='mt-3'>
+                <Col>
+                  {isCompany ? (
+                    <AddDemands contract={contract} accounts={accounts} />
+                  ) : null}
+                </Col>
+              </Row>
+
+              <Row className='mt-3'>
+                <Col>
+                {isArtist ? (
+                  <Demands contract={contract} accounts={accounts} />
+                ) : null}
+                </Col>
+              </Row>
+
+              <Row className='mt-3'>
+                <Col>
+                {isCompany ? (
+                  <DemandsC contract={contract} accounts={accounts} />
+                ) : null}
+                </Col>
+              </Row>
+
+              <Row className='mt-3'>
+                <Col>
+                  {isCompany && hasDemand ? (
+                    <Applications contract={contract} accounts={accounts} />
+                  ) : null}
+                </Col>
+              </Row>
             </Row>
-            <Row className='mt-3'>
-            <Col>
-              {isAdmin ? (
-                <Blacklist contract={contract} accounts={accounts} />
-              ) : null}
-            </Col>
-          </Row>
-
-          <Row className='mt-3'>
-            <Col>
-              <AddDemands contract={contract} accounts={accounts} />
-            </Col>
-          </Row>
-
-          <Row className='mt-3'>
-            <Col>
-              <Demands contract={contract} accounts={accounts} />
-            </Col>
-          </Row>
-
-
-          <Row className='mt-3'>
-            <Col>
-              <Applications contract={contract} accounts={accounts} />
-            </Col>
-          </Row>
+            ) : null}
         </Container>
       </div>
     )

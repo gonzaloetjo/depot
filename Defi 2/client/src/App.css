@@ -1,7 +1,9 @@
 .App {
   text-align: center;
+  align-items: center;
   margin: 0px;
   background-color: rgb(71, 76, 82);
+  min-height: 540px;
 }
 
 /* Navbar */

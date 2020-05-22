@@ -78,11 +78,11 @@ class Demands extends Component {
   // }
 
 
-  application = async id => {
+  application = async (company, demand) => {
     const { contract, accounts } = this.props;
 
     try {
-      await contract.methods.application(id).send({ from: accounts[0] });
+      await contract.methods.application(company, demand).send({ from: accounts[0] });
     } catch (err) {
       console.log(err);
     }
@@ -97,12 +97,12 @@ class Demands extends Component {
       <Container>
         <Row>
           <Col>
-            <h5 className='text-white'>List of Request</h5>
+            <h5 className='text-white'>Art Requests</h5>
             <Table striped bordered hover variant='dark'>
               <thead>
                 <tr>
                   <th>company</th>
-                  <th>State</th>
+                  <th>Demand</th>
                   <th>Deadline</th>
                   <th>Payment (wei)</th>
                   <th>Description</th>
@@ -113,18 +113,19 @@ class Demands extends Component {
                 {requests.map((el, idx) => (
                   <tr key={idx}>
                     <td>{el.company}</td>
-                    <td>{el.status}</td>
+                    <td>{el.demand}</td>
                     {console.log(el[0])}
                     <td>{el.delay}</td>
                     <td>{el.remuneration}</td>
                     <td>{el.description}</td>
                     <th>
+                    {console.log(el.company_address, el.demand)}
                       <Button
                         variant={
                           !stateRequest[el.state] === 'INPROGRESS' ? 'outline-dark' : 'outline-success'
                         }
                         size='sm'
-                        onClick={() => this.applyRequest(el.id)}
+                        onClick={() => this.application(el.company_address, el.demand )}
                         disabled={
                           stateRequest[el.state] === 'INPROGRESS' ? true : false
                         }

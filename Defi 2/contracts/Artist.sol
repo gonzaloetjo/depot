@@ -35,7 +35,7 @@ contract Rating {
         uint numberRatings;
         uint[] allRatings;
     }
-    mapping(address => Artist) artists;
+    mapping(address => Artist) public artists;
     
     constructor() public payable{
         owner = msg.sender;
@@ -136,5 +136,11 @@ contract Rating {
             }
         }
         return false;
+    }
+    function isArtist(address _artist) public view returns (bool) {
+        return allArtist[_artist];
+    }
+    function getArtist(address _artist) public view returns (string memory){
+        return artists[_artist].name;
     }
 }
