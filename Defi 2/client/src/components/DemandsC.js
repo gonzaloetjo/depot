@@ -78,7 +78,7 @@ class DemandsC extends Component {
                     <td>{el.description}</td>
                     {/*) : null}*/}
                   </tr>
-                ))}
+                ))} 
               </tbody>
             </Table>
           </Col>
